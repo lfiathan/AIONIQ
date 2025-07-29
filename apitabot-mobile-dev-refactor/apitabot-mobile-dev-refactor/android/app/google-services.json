@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1058813534479",
+    "firebase_url": "https://apitabot-e7be8-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "apitabot-e7be8",
+    "storage_bucket": "apitabot-e7be8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058813534479:android:7fbfd019ef4785c0de5e7a",
+        "android_client_info": {
+          "package_name": "com.apitabot.apitabot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058813534479-piuv24crl3dhd9n2s63u0u0qbin3opoi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apitabot.apitabot",
+            "certificate_hash": "d08df8f356c598a408e0792710734eb11ccc504f"
+          }
+        },
+        {
+          "client_id": "1058813534479-opipeimracrpmfv4i86pes42ojr3r6e3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDThZj91V2j7C8j8_T-gOH3R3S0-yk9wWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058813534479-opipeimracrpmfv4i86pes42ojr3r6e3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1058813534479-4h8iqfr72gfcqndsdkpffv94lal4ml5k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.apitabot.apitabot"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

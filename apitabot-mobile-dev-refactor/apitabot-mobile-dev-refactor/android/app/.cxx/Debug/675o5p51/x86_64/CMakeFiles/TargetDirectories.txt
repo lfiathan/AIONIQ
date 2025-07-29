@@ -1,0 +1,2 @@
+D:/Donwloads/apitabot-mobile-dev-refactor/apitabot-mobile-dev-refactor/android/app/.cxx/Debug/675o5p51/x86_64/CMakeFiles/edit_cache.dir
+D:/Donwloads/apitabot-mobile-dev-refactor/apitabot-mobile-dev-refactor/android/app/.cxx/Debug/675o5p51/x86_64/CMakeFiles/rebuild_cache.dir
