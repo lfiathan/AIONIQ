@@ -38,7 +38,8 @@ class HomeViewNew extends GetView<HomeController> {
                   return Container(
                     width: double.infinity,
                     color: const Color(0xff1A3C40),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Text(
@@ -68,7 +69,8 @@ class HomeViewNew extends GetView<HomeController> {
                 return SingleChildScrollView(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -97,7 +99,8 @@ class HomeViewNew extends GetView<HomeController> {
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xff000000).withOpacity(0.05),
+                                  color:
+                                      const Color(0xff000000).withOpacity(0.05),
                                   blurRadius: 15,
                                   offset: const Offset(0, 2),
                                 ),
@@ -108,13 +111,16 @@ class HomeViewNew extends GetView<HomeController> {
                               children: [
                                 Obx(() {
                                   if (controller.homeList.isEmpty) {
-                                    return const Center(child: CircularProgressIndicator());
+                                    return const Center(
+                                        child: CircularProgressIndicator());
                                   }
                                   final sensorItems = [
                                     {
-                                      'icon': 'assets/images/home_icons/humidity.png',
+                                      'icon':
+                                          'assets/images/home_icons/humidity.png',
                                       'title': 'Kelembaban',
-                                      'value': controller.getSensorValue('kelembaban'),
+                                      'value': controller
+                                          .getSensorValue('kelembaban'),
                                     },
                                     {
                                       'icon': 'assets/images/home_icons/ph.png',
@@ -122,24 +128,29 @@ class HomeViewNew extends GetView<HomeController> {
                                       'value': controller.getSensorValue('ph'),
                                     },
                                     {
-                                      'icon': 'assets/images/home_icons/water_quality.png',
+                                      'icon':
+                                          'assets/images/home_icons/water_quality.png',
                                       'title': 'Kualitas Air',
-                                      'value': controller.getSensorValue('kualitasAir'),
+                                      'value': controller
+                                          .getSensorValue('kualitasAir'),
                                     },
                                     {
-                                      'icon': 'assets/images/home_icons/temperature.png',
+                                      'icon':
+                                          'assets/images/home_icons/temperature.png',
                                       'title': 'Suhu Air',
-                                      'value': controller.getSensorValue('temperatur'),
+                                      'value': controller
+                                          .getSensorValue('temperatur'),
                                     },
                                   ];
                                   return Column(
                                     children: [
                                       GridView.builder(
                                         shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
                                         itemCount: sensorItems.length,
                                         gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           crossAxisSpacing: 10,
                                           mainAxisSpacing: 10,
@@ -167,7 +178,8 @@ class HomeViewNew extends GetView<HomeController> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                               color: Color(0xff60AB4D),
-                                              decoration: TextDecoration.underline,
+                                              decoration:
+                                                  TextDecoration.underline,
                                             ),
                                           ),
                                         ),
@@ -292,7 +304,8 @@ class HomeViewNew extends GetView<HomeController> {
                         const SizedBox(height: 10),
                         const Text(
                           'Sedang melakukan aksi...',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 20),
                         GestureDetector(

@@ -79,21 +79,21 @@ class FaqView extends GetView<FaqController> {
                 child: TextField(
                   style: const TextStyle(color: Colors.white),
                   controller: controller.searchController,
+                  textAlign: TextAlign.start,
                   decoration: InputDecoration(
                     hintText: 'Search FAQ',
-                    prefixIcon: Container(
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(99),
-                      ),
-                      child: const Icon(
+                    prefixIcon: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Icon(
                         Icons.search,
                         color: Colors.white,
                       ),
                     ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20), // Adjust this
                     border: InputBorder.none,
                     hintStyle: const TextStyle(color: Colors.white),
+                    suffixIcon: const SizedBox(width: 40),
                   ),
                 ),
               ),
@@ -118,54 +118,56 @@ class FaqView extends GetView<FaqController> {
                       itemBuilder: (context, index) {
                         final faq = controller.filteredFaqs[index];
                         return Obx(() => Card(
-                          surfaceTintColor: Colors.white,
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0),
-                          ),
-                          child: ExpansionTile(
-                            trailing: controller.customTileExpanded.value
-                                ? const Icon(Icons.keyboard_arrow_up_rounded)
-                                : const Icon(Icons.keyboard_arrow_down_rounded),
-                            title: Text(
-                              faq.question,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
+                              surfaceTintColor: Colors.white,
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
                               ),
-                            ),
-                            leading: const Icon(
-                              Icons.help_rounded,
-                              color: Color(0xff60AB4D),
-                            ),
-                            onExpansionChanged: (value) {
-                              controller.customTileExpanded.value = value;
-                            },
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                child: Column(
-                                  children: [
-                                    const Divider(
-                                      color: Colors.black,
-                                      height: 1,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      faq.answer,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w100,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
+                              child: ExpansionTile(
+                                trailing: controller.customTileExpanded.value
+                                    ? const Icon(
+                                        Icons.keyboard_arrow_up_rounded)
+                                    : const Icon(
+                                        Icons.keyboard_arrow_down_rounded),
+                                title: Text(
+                                  faq.question,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
+                                leading: const Icon(
+                                  Icons.help_rounded,
+                                  color: Color(0xff60AB4D),
+                                ),
+                                onExpansionChanged: (value) {
+                                  controller.customTileExpanded.value = value;
+                                },
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Column(
+                                      children: [
+                                        const Divider(
+                                          color: Colors.black,
+                                          height: 1,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          faq.answer,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w100,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ));
+                            ));
                       },
                     );
                   }
