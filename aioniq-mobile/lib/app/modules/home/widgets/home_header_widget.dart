@@ -14,11 +14,9 @@ class HomeHeaderWidget extends GetView<HomeController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Apens-iot',
+            'AIONIQ',
             style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           Row(
             children: [

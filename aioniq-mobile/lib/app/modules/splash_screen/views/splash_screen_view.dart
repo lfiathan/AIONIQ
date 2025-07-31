@@ -8,13 +8,13 @@ class SplashScreenView extends GetView<SplashScreenController> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color(0xff60AB4D),
+      backgroundColor: Color(0xffD1EBCA),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage('assets/images/logo/Logo_Apens-iot_+_Text__Warna_Putih_-removebg-preview.png'),
+              image: AssetImage('assets/images/logo/Logo Akuabot.png'),
               width: 200,
             ),
             SizedBox(
@@ -31,7 +31,11 @@ class SplashScreenView extends GetView<SplashScreenController> {
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(vertical: 25),
-        child: Text("v1.0.0", style: TextStyle(color: Colors.white), textAlign: TextAlign.center,),
+        child: Text(
+          "v1.0.0",
+          style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
