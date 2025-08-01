@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:akuabot/app/data/models/home_model.dart';
 import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:akuabot/app/data/mock_data.dart';
 
 // ... import yang sudah ada tetap sama
 
@@ -12,8 +13,11 @@ class HomeController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
 
+  final bool isMockMode = true; // Set true to use mock data
+
   RxList<HomeModel> homeList = <HomeModel>[].obs;
-  RxList<Map<String, dynamic>> schedulesController = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> schedulesController =
+      <Map<String, dynamic>>[].obs;
   RxInt feedDuration = 0.obs;
   RxBool isButtonDisabled = false.obs;
   RxInt pakanStatus = 0.obs;
@@ -60,6 +64,14 @@ class HomeController extends GetxController {
   // ------------------ Sensor Fetching ------------------ //
 
   Future<void> fetchSensorData() async {
+    if (isMockMode) {
+      final mockData = mockSensorData();
+      addDataToHomeModel(mockData);
+      checkThresholds(mockData);
+      homeList.refresh();
+      print('Using mock sensor data for UI development.');
+      return; // Exit the method
+    }
     try {
       final endpoints = {
         'ph': '/api/value/ph',
@@ -75,7 +87,9 @@ class HomeController extends GetxController {
 
         if (response.statusCode == 200) {
           final decoded = jsonDecode(response.body);
-          if (decoded['status'] == true && decoded['data'] != null && decoded['data'].isNotEmpty) {
+          if (decoded['status'] == true &&
+              decoded['data'] != null &&
+              decoded['data'].isNotEmpty) {
             final value = decoded['data'][0];
             sensorData[key] = value[key];
           } else {
@@ -134,6 +148,12 @@ class HomeController extends GetxController {
   // ------------------ Schedule API ------------------ //
 
   Future<void> fetchJadwalPakan() async {
+    if (isMockMode) {
+      schedulesController.value = mockScheduleData();
+      print('Using mock schedule data for UI development.');
+      return; // Exit the method
+    }
+
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/schedule/get'));
       if (response.statusCode == 200) {
@@ -145,21 +165,24 @@ class HomeController extends GetxController {
             {
               'id': 1,
               'title': 'Jadwal Pagi',
-              'schedule': schedule['pagi']['tanggal'] + "T" + schedule['pagi']['jam'],
+              'schedule':
+                  schedule['pagi']['tanggal'] + "T" + schedule['pagi']['jam'],
               'duration': schedule['pagi']['durasi'],
               'isActive': schedule['pagi']['status'],
             },
             {
               'id': 2,
               'title': 'Jadwal Siang',
-              'schedule': schedule['siang']['tanggal'] + "T" + schedule['siang']['jam'],
+              'schedule':
+                  schedule['siang']['tanggal'] + "T" + schedule['siang']['jam'],
               'duration': schedule['siang']['durasi'],
               'isActive': schedule['siang']['status'],
             },
             {
               'id': 3,
               'title': 'Jadwal Malam',
-              'schedule': schedule['malam']['tanggal'] + "T" + schedule['malam']['jam'],
+              'schedule':
+                  schedule['malam']['tanggal'] + "T" + schedule['malam']['jam'],
               'duration': schedule['malam']['durasi'],
               'isActive': schedule['malam']['status'],
             }
@@ -171,7 +194,8 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> updateJadwalPakan(int id, String slot, Map<String, dynamic> data) async {
+  Future<void> updateJadwalPakan(
+      int id, String slot, Map<String, dynamic> data) async {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/schedule/update/$id'),
@@ -238,7 +262,9 @@ class HomeController extends GetxController {
       HomeModel(
         key: 'kelembaban',
         title: 'Kelembaban',
-        value: data['kelembaban'] != null ? "${data['kelembaban'].toStringAsFixed(1)} %" : "-",
+        value: data['kelembaban'] != null
+            ? "${data['kelembaban'].toStringAsFixed(1)} %"
+            : "-",
         image: 'assets/images/home_icons/humidity.png',
       ),
       HomeModel(
@@ -250,13 +276,17 @@ class HomeController extends GetxController {
       HomeModel(
         key: 'kualitasAir',
         title: 'Kualitas Air',
-        value: data['nutrisi'] != null ? "${data['nutrisi'].toStringAsFixed(0)} PPM" : "-",
+        value: data['nutrisi'] != null
+            ? "${data['nutrisi'].toStringAsFixed(0)} PPM"
+            : "-",
         image: 'assets/images/home_icons/water_quality.png',
       ),
       HomeModel(
         key: 'temperatur',
         title: 'Temperatur',
-        value: data['suhu'] != null ? "${data['suhu'].toStringAsFixed(1)} °C" : "-",
+        value: data['suhu'] != null
+            ? "${data['suhu'].toStringAsFixed(1)} °C"
+            : "-",
         image: 'assets/images/home_icons/temperature.png',
       ),
     ]);
@@ -272,13 +302,16 @@ class HomeController extends GetxController {
       );
     }
     if (data['nutrisi'] != null && data['nutrisi'] < qualityThreshold) {
-      Get.snackbar("Peringatan Kualitas Air", "Kualitas air rendah (${data['nutrisi'].toStringAsFixed(0)} PPM)");
+      Get.snackbar("Peringatan Kualitas Air",
+          "Kualitas air rendah (${data['nutrisi'].toStringAsFixed(0)} PPM)");
     }
     if (data['ph'] != null && data['ph'] < phThreshold) {
-      Get.snackbar("Peringatan pH Air", "pH air terlalu rendah (${data['ph'].toStringAsFixed(2)})");
+      Get.snackbar("Peringatan pH Air",
+          "pH air terlalu rendah (${data['ph'].toStringAsFixed(2)})");
     }
     if (data['suhu'] != null && data['suhu'] < tempThreshold) {
-      Get.snackbar("Peringatan Temperatur", "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
+      Get.snackbar("Peringatan Temperatur",
+          "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
     }
   }
 

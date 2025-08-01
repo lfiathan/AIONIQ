@@ -53,7 +53,8 @@ class SetIpView extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        Get.offAllNamed('/home');
+                        Get.back();
+                        //Get.offAllNamed('/home');
                       },
                     ),
                     const SizedBox(height: 10),
@@ -91,7 +92,8 @@ class SetIpView extends StatelessWidget {
                                   decoration: const InputDecoration(
                                     labelText: 'Alamat IP Server',
                                     border: OutlineInputBorder(),
-                                    hintText: 'contoh: http://192.168.1.100:3000',
+                                    hintText:
+                                        'contoh: http://192.168.1.100:3000',
                                   ),
                                   keyboardType: TextInputType.url,
                                 ),
@@ -100,7 +102,8 @@ class SetIpView extends StatelessWidget {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: () async {
-                                      final ipInput = ipTextController.text.trim();
+                                      final ipInput =
+                                          ipTextController.text.trim();
 
                                       if (!ipInput.startsWith('http')) {
                                         Get.snackbar(
@@ -115,7 +118,8 @@ class SetIpView extends StatelessWidget {
                                       await ipController.saveIp(ipInput);
 
                                       if (Get.isRegistered<HomeController>()) {
-                                        final homeController = Get.find<HomeController>();
+                                        final homeController =
+                                            Get.find<HomeController>();
                                         homeController.fetchAllData();
                                       }
 
@@ -132,7 +136,8 @@ class SetIpView extends StatelessWidget {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xff1A3C40),
-                                      padding: const EdgeInsets.symmetric(vertical: 14),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),

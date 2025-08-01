@@ -22,7 +22,9 @@ class EducationView extends GetView<EducationController> {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: Get.back,
+                        onTap: () {
+                          Get.back();
+                        },
                         child: Row(
                           children: [
                             const Icon(Icons.arrow_back_ios_new_outlined,
@@ -65,8 +67,7 @@ class EducationView extends GetView<EducationController> {
                             ],
                           ),
                           child: ListView(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 24),
+                            padding: const EdgeInsets.symmetric(vertical: 24),
                             children: _buildImages(),
                           ),
                         ),
@@ -78,7 +79,7 @@ class EducationView extends GetView<EducationController> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
                           child: Obx(
-                                () => SingleChildScrollView(
+                            () => SingleChildScrollView(
                               child: _buildPageContent(), // isi dinamis
                             ),
                           ),
@@ -101,7 +102,7 @@ class EducationView extends GetView<EducationController> {
     final items = ['temperature', 'humidity', 'water_quality', 'ph'];
     return List.generate(items.length, (i) {
       return Obx(
-            () => GestureDetector(
+        () => GestureDetector(
           onTap: () => controller.activePage.value = i,
           child: _buildImage(i, items[i]),
         ),
@@ -147,10 +148,9 @@ class EducationView extends GetView<EducationController> {
   }
 
   // ────────────────────────── Styles ────────────────────────────────────
-  final _boldStyle =
-  const TextStyle(fontSize: 14, color: Color(0xffDFF8D5), fontWeight: FontWeight.bold);
-  final _normalStyle =
-  const TextStyle(fontSize: 12, color: Color(0xffDFF8D5));
+  final _boldStyle = const TextStyle(
+      fontSize: 14, color: Color(0xffDFF8D5), fontWeight: FontWeight.bold);
+  final _normalStyle = const TextStyle(fontSize: 12, color: Color(0xffDFF8D5));
 
   // ────────────────────────── Konten Dinamis ────────────────────────────
   Widget _buildPageContent() {
@@ -163,7 +163,9 @@ class EducationView extends GetView<EducationController> {
         children: [
           Text(data.title,
               style: const TextStyle(
-                  fontSize: 27, fontWeight: FontWeight.bold, color: Color(0xffF6EDD9))),
+                  fontSize: 27,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xffF6EDD9))),
           const SizedBox(height: 10),
           Text(data.optimalRange, style: _boldStyle),
           const SizedBox(height: 18),
@@ -176,8 +178,8 @@ class EducationView extends GetView<EducationController> {
           Text('Catatan Penting:', style: _boldStyle),
           Text(
             'Nilai batas optimal dan maksimal parameter air dan udara dapat '
-                'bervariasi tergantung jenis tanaman dan ikan. Selalu pantau kondisi '
-                'secara berkala dan konsultasikan dengan tim ahli.',
+            'bervariasi tergantung jenis tanaman dan ikan. Selalu pantau kondisi '
+            'secara berkala dan konsultasikan dengan tim ahli.',
             style: _normalStyle,
           ),
         ],
@@ -195,7 +197,9 @@ class EducationView extends GetView<EducationController> {
       children: [
         Text(data.title,
             style: const TextStyle(
-                fontSize: 27, fontWeight: FontWeight.bold, color: Color(0xffF6EDD9))),
+                fontSize: 27,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffF6EDD9))),
         const SizedBox(height: 10),
         Text(data.optimalRange, style: _boldStyle),
         const SizedBox(height: 18),
