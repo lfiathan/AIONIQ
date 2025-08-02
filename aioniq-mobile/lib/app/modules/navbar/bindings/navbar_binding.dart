@@ -8,8 +8,6 @@ class NavbarBinding extends Bindings {
     Get.lazyPut<NavbarController>(
       () => NavbarController(),
     );
-    Get.lazyPut<ScheduleController>(
-      () => ScheduleController(),
-    );
   }
 }
+

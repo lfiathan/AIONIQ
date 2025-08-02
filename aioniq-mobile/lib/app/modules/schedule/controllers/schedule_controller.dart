@@ -1,124 +1,135 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hawk_fab_menu/hawk_fab_menu.dart';
 import 'package:http/http.dart' as http;
+import 'package:akuabot/app/data/mock_data.dart';
+import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:intl/intl.dart';
 
 class ScheduleController extends GetxController {
-  Rx<DateTime> selectedDay = DateTime.now().obs;
+  final IpController ipController = Get.find<IpController>();
+  String get baseUrl => ipController.baseUrl;
+  final bool isMockMode = true;
 
-  // Simpan schedules dari API
+  Rx<DateTime> selectedDay = DateTime.now().obs;
   RxList<Map<String, dynamic>> schedulesController =
       <Map<String, dynamic>>[].obs;
 
-  final String baseUrl =
-      'http://localhost:3000/api'; // Ganti sesuai alamat API lokal kamu
-  final String userId = 'testing'; // Sesuaikan dengan user id login
+  // Variabel userId dan baseUrl dihapus karena sudah ada di IpController
 
   @override
   void onInit() {
     super.onInit();
-    fetchSchedules();
+    fetchJadwalPakan();
   }
 
-  Future<void> fetchSchedules() async {
-    try {
-      final response =
-          await http.get(Uri.parse('$baseUrl/feedSchedules/$userId'));
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        schedulesController.value = List<Map<String, dynamic>>.from(data);
-      } else {
-        Get.snackbar('Error', 'Gagal mengambil jadwal');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+  Future<void> fetchJadwalPakan() async {
+    if (isMockMode) {
+      schedulesController.value = mockScheduleData();
+      print('Using mock schedule data for UI development.');
+      return;
     }
-  }
-
-  Future<void> changeIsActive(String id, bool isActive) async {
     try {
-      final response = await http.patch(
-        Uri.parse('$baseUrl/feedSchedules/$userId/$id'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'isActive': isActive}),
-      );
+      final response = await http.get(Uri.parse('$baseUrl/api/schedule/get'));
       if (response.statusCode == 200) {
-        // Update lokal setelah sukses
-        int index = schedulesController.indexWhere((e) => e['id'] == id);
-        if (index != -1) {
-          schedulesController[index]['isActive'] = isActive;
-          schedulesController.refresh();
+        final decoded = jsonDecode(response.body);
+        if (decoded['status'] == true && decoded['data'] != null) {
+          final schedule = decoded['data'][0];
+          schedulesController.value = [
+            {
+              'id': 1,
+              'title': 'Jadwal Pagi',
+              'schedule':
+                  schedule['pagi']['tanggal'] + "T" + schedule['pagi']['jam'],
+              'duration': schedule['pagi']['durasi'],
+              'isActive': schedule['pagi']['status'],
+            },
+            {
+              'id': 2,
+              'title': 'Jadwal Siang',
+              'schedule':
+                  schedule['siang']['tanggal'] + "T" + schedule['siang']['jam'],
+              'duration': schedule['siang']['durasi'],
+              'isActive': schedule['siang']['status'],
+            },
+            {
+              'id': 3,
+              'title': 'Jadwal Malam',
+              'schedule':
+                  schedule['malam']['tanggal'] + "T" + schedule['malam']['jam'],
+              'duration': schedule['malam']['durasi'],
+              'isActive': schedule['malam']['status'],
+            }
+          ];
         }
-      } else {
-        Get.snackbar('Error', 'Gagal mengubah status jadwal');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      print("Error fetchJadwalPakan: $e");
     }
   }
 
-  // Method baru untuk update jadwal (tanggal dan waktu)
-  Future<bool> updateSchedule(String id, String newScheduleIso) async {
+  Future<void> updateJadwalPakan(
+      int id, String slot, Map<String, dynamic> data) async {
+    if (isMockMode) {
+      print("Jadwal $slot berhasil diupdate (MOCK).");
+      return;
+    }
     try {
-      final response = await http.patch(
-        Uri.parse('$baseUrl/feedSchedules/$userId/$id'),
+      final response = await http.put(
+        Uri.parse('$baseUrl/api/schedule/update/$id'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'schedule': newScheduleIso}),
+        body: jsonEncode({...data, 'slot': slot}),
       );
       if (response.statusCode == 200) {
-        // Update data lokal supaya UI langsung refresh
-        int index = schedulesController.indexWhere((e) => e['id'] == id);
-        if (index != -1) {
-          schedulesController[index]['schedule'] = newScheduleIso;
-          schedulesController.refresh();
-        }
-        return true;
+        print("Jadwal $slot berhasil diupdate.");
       } else {
-        return false;
+        print("Gagal update jadwal: ${response.statusCode}");
       }
     } catch (e) {
-      return false;
+      print("Error updateJadwalPakan: $e");
     }
   }
 
-  // Kirim request siram tanaman sekarang ke API
-  Future<void> waterNow() async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/watering'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(
-            {'userId': userId, 'schedule': DateTime.now().toIso8601String()}),
-      );
-      if (response.statusCode == 200) {
-        Get.snackbar("Berhasil", "Tanaman telah disiram",
-            backgroundColor: Colors.green, colorText: Colors.white);
-      } else {
-        Get.snackbar("Error", "Gagal menyiram tanaman");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Terjadi kesalahan: $e");
+  Future<bool> updateScheduleTime(int index, DateTime newDate) async {
+    if (isMockMode) {
+      if (index < 0 || index >= schedulesController.length) return false;
+      schedulesController[index]['schedule'] = newDate.toIso8601String();
+      schedulesController.refresh();
+      return true;
     }
+    if (index < 0 || index >= schedulesController.length) return false;
+    schedulesController[index]['schedule'] = newDate.toIso8601String();
+    schedulesController.refresh();
+    await Future.delayed(const Duration(milliseconds: 100));
+    return true;
   }
 
-  // Kirim request beri pakan sekarang ke API
-  Future<void> feedNow() async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/feeding'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(
-            {'userId': userId, 'schedule': DateTime.now().toIso8601String()}),
-      );
-      if (response.statusCode == 200) {
-        Get.snackbar("Berhasil", "Pakan telah diberikan",
-            backgroundColor: Colors.green, colorText: Colors.white);
-      } else {
-        Get.snackbar("Error", "Gagal memberi pakan");
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Terjadi kesalahan: $e");
+  Future<bool> updateScheduleDuration(int index, int duration) async {
+    if (isMockMode) {
+      if (index < 0 || index >= schedulesController.length) return false;
+      schedulesController[index]['duration'] = duration;
+      schedulesController.refresh();
+      return true;
     }
+    if (index < 0 || index >= schedulesController.length) return false;
+    schedulesController[index]['duration'] = duration;
+    schedulesController.refresh();
+    await Future.delayed(const Duration(milliseconds: 100));
+    return true;
+  }
+
+  Future<bool> updateScheduleActiveStatus(int index, bool isActive) async {
+    if (isMockMode) {
+      if (index < 0 || index >= schedulesController.length) return false;
+      schedulesController[index]['isActive'] = isActive;
+      schedulesController.refresh();
+      return true;
+    }
+    if (index < 0 || index >= schedulesController.length) return false;
+    schedulesController[index]['isActive'] = isActive;
+    schedulesController.refresh();
+    await Future.delayed(const Duration(milliseconds: 100));
+    return true;
   }
 }
+

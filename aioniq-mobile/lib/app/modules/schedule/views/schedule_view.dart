@@ -35,11 +35,9 @@ class ScheduleView extends GetView<ScheduleController> {
                       topLeft: Radius.circular(30)),
                 ),
                 child: Obx(() {
-                  // Observing schedulesController RxList
                   if (controller.schedulesController.isEmpty) {
                     return const Center(child: Text('Belum ada jadwal.'));
                   }
-
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 25, vertical: 15),
@@ -51,112 +49,106 @@ class ScheduleView extends GetView<ScheduleController> {
                               DateTime.now();
                       final isActive = schedule['isActive'] ?? false;
 
-                      return Container(
+                      return Card(
                         margin:
                             EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.normalBlue),
+                          side: const BorderSide(
+                              color: AppColors.normalBlue, width: 1.0),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // Tanggal & Waktu
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  DateFormat('EEEE, d MMMM y', 'id_ID')
-                                      .format(scheduleDate),
-                                  style: Get.textTheme.titleSmall!.copyWith(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                SizedBox(height: Get.height * 0.005),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 10),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.darkBlue,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    DateFormat('HH:mm', 'id_ID')
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    DateFormat('EEEE, d MMMM y', 'id_ID')
                                         .format(scheduleDate),
-                                    style: Get.textTheme.titleSmall!
-                                        .copyWith(color: Colors.white),
+                                    style: Get.textTheme.titleSmall!.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700),
                                   ),
-                                ),
-                              ],
-                            ),
-
-                            // Edit & Switch aktif/nonaktif
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    DatePickerBdaya.showDateTimePicker(
-                                      context,
-                                      showTitleActions: true,
-                                      minTime: DateTime(2024, 1, 1),
-                                      maxTime: DateTime(2027, 12, 31),
-                                      onChanged: (date) {},
-                                      onConfirm: (date) async {
-                                        // Panggil API update jadwal
-                                        final id = schedule['id'];
-                                        if (id != null) {
-                                          try {
-                                            // Panggil API update jadwal dengan PATCH/PUT sesuai controller
-                                            final response =
-                                                await controller.updateSchedule(
-                                                    id, date.toIso8601String());
+                                  SizedBox(height: Get.height * 0.005),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 5, horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.darkBlue,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      DateFormat('HH:mm', 'id_ID')
+                                          .format(scheduleDate),
+                                      style: Get.textTheme.titleSmall!
+                                          .copyWith(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      DatePickerBdaya.showDateTimePicker(
+                                        context,
+                                        showTitleActions: true,
+                                        minTime: DateTime(2024, 1, 1),
+                                        maxTime: DateTime(2027, 12, 31),
+                                        onChanged: (date) {},
+                                        onConfirm: (date) async {
+                                          final id = schedule['id'];
+                                          if (id != null) {
+                                            // Memanggil metode updateScheduleTime dari controller
+                                            final response = await controller
+                                                .updateScheduleTime(
+                                                    index, date);
                                             if (response) {
                                               Get.snackbar("Berhasil",
                                                   "Jadwal berhasil diubah",
                                                   backgroundColor: Colors.green,
                                                   colorText: Colors.white);
-                                              controller
-                                                  .fetchSchedules(); // Refresh data
                                             } else {
                                               Get.snackbar("Gagal",
                                                   "Gagal mengubah jadwal",
                                                   backgroundColor: Colors.red,
                                                   colorText: Colors.white);
                                             }
-                                          } catch (e) {
-                                            Get.snackbar("Error",
-                                                "Terjadi kesalahan: $e");
                                           }
-                                        }
-                                      },
-                                      currentTime: scheduleDate,
-                                      locale: LocaleType.id,
-                                    );
-                                  },
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: AppColors.normalBlue,
+                                        },
+                                        currentTime: scheduleDate,
+                                        locale: LocaleType.id,
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: AppColors.normalBlue,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: Get.width * 0.05),
-                                Switch(
-                                  value: isActive,
-                                  onChanged: (value) async {
-                                    final id = schedule['id'];
-                                    if (id != null) {
-                                      await controller.changeIsActive(
-                                          id, value);
-                                    }
-                                  },
-                                  activeColor: AppColors.normalBlueActive,
-                                ),
-                              ],
-                            )
-                          ],
+                                  SizedBox(width: Get.width * 0.05),
+                                  Switch(
+                                    value: isActive,
+                                    onChanged: (value) async {
+                                      // Memanggil metode updateScheduleActiveStatus dari controller
+                                      final id = schedule['id'];
+                                      if (id != null) {
+                                        await controller
+                                            .updateScheduleActiveStatus(
+                                                index, value);
+                                      }
+                                    },
+                                    activeColor: AppColors.normalBlueActive,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -170,3 +162,4 @@ class ScheduleView extends GetView<ScheduleController> {
     );
   }
 }
+

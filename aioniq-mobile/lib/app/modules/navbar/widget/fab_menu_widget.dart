@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hawk_fab_menu/hawk_fab_menu.dart';
 import '../../../constant/app_colors.dart';
-import '../../schedule/controllers/schedule_controller.dart';
+import '../controllers/navbar_controller.dart';
 
 List<HawkFabMenuItem> fabMenu(BuildContext context) {
-  final controller = Get.find<ScheduleController>();
+  final controller = Get.find<NavbarController>();
 
   return [
     HawkFabMenuItem(
@@ -193,4 +193,3 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
     ),
   ];
 }
-
