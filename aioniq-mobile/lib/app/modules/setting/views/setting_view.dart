@@ -47,7 +47,7 @@ class SettingView extends GetView<SettingController> {
                       ),
                     ),
                     const Text(
-                      'Tentang Apens-iot',
+                      'Tentang AIONIQ',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class SettingView extends GetView<SettingController> {
                     ),
                   ],
                   image: const DecorationImage(
-                    image: AssetImage('assets/images/about/Design Apens-iot Page (Tentang Apens-iot).png'),
+                    image: AssetImage('assets/images/about/AIONIQ-banner.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -91,7 +91,7 @@ class SettingView extends GetView<SettingController> {
                       onTap: () async {
                         controller.launchInBrowser(
                           Uri.parse(
-                            'https://api.whatsapp.com/send/?phone=6289681149655&text=Halo+Apitabot%2C+saya+ingin+bertanya+tentang+produk+anda.&type=phone_number&app_absent=0',
+                            'https://api.whatsapp.com/send/?phone=6289681149655&text=Halo+AIONIQ%2C+saya+ingin+bertanya+tentang+produk+anda.&type=phone_number&app_absent=0',
                           ),
                         );
                       },
@@ -120,7 +120,8 @@ class SettingView extends GetView<SettingController> {
                                 borderRadius: BorderRadius.circular(99),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xff000000).withOpacity(0.05),
+                                    color: const Color(0xff000000)
+                                        .withOpacity(0.05),
                                     blurRadius: 15,
                                     offset: const Offset(0, 2),
                                   ),
@@ -150,7 +151,7 @@ class SettingView extends GetView<SettingController> {
                       onTap: () async {
                         controller.launchInBrowser(
                           Uri.parse(
-                            'https://api.whatsapp.com/send/?phone=6289681149655&text=Halo+Apitabot%2C+saya+ingin+memberikan+saran+dan+masukan+tentang+produk+anda.&type=phone_number&app_absent=0',
+                            'https://api.whatsapp.com/send/?phone=6289681149655&text=Halo+AIONIQ%2C+saya+ingin+memberikan+saran+dan+masukan+tentang+produk+anda.&type=phone_number&app_absent=0',
                           ),
                         );
                       },
@@ -179,7 +180,8 @@ class SettingView extends GetView<SettingController> {
                                 borderRadius: BorderRadius.circular(99),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xff000000).withOpacity(0.05),
+                                    color: const Color(0xff000000)
+                                        .withOpacity(0.05),
                                     blurRadius: 15,
                                     offset: const Offset(0, 2),
                                   ),

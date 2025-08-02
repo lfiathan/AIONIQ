@@ -12,7 +12,7 @@ class BuildSchedulesWidget extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
+      //margin: const EdgeInsets.symmetric(horizontal: 10),
       width: Get.width,
       height: Get.height * 0.22,
       decoration: BoxDecoration(
@@ -46,19 +46,23 @@ class BuildSchedulesWidget extends GetView<HomeController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      DateFormat('EEEE, d MMMM y', 'id_ID').format(scheduleTime),
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                      DateFormat('EEEE, d MMMM y', 'id_ID')
+                          .format(scheduleTime),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w400),
                     ),
                     Row(
                       children: [
                         Text(
                           DateFormat('HH:mm').format(scheduleTime),
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w400),
                         ),
                         const SizedBox(width: 5),
                         Text(
                           '($duration detik)',
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w400),
                         ),
                       ],
                     ),
@@ -135,7 +139,8 @@ class DurationPickerBottomSheet extends StatelessWidget {
               GestureDetector(
                 onTap: () => Get.back(),
                 child: const Text('Batal',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(width: 10),
               Obx(() {
@@ -143,32 +148,35 @@ class DurationPickerBottomSheet extends StatelessWidget {
                   onTap: controller.isButtonDisabled.value
                       ? null
                       : () {
-                    controller.isButtonDisabled.value = true;
-                    controller.updateScheduleDuration(scheduleIndex, controller.feedDuration.value).then((success) {
-                      if (success) {
-                        controller.feedDuration.value = 0;
-                        Get.back();
-                        Get.snackbar(
-                          "Berhasil",
-                          "Durasi berhasil diubah",
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          isDismissible: true,
-                          forwardAnimationCurve: Curves.ease,
-                          duration: const Duration(seconds: 1),
-                        );
-                      } else {
-                        Get.snackbar(
-                          "Error",
-                          "Gagal mengubah durasi",
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                      }
-                    }).whenComplete(() {
-                      controller.isButtonDisabled.value = false;
-                    });
-                  },
+                          controller.isButtonDisabled.value = true;
+                          controller
+                              .updateScheduleDuration(
+                                  scheduleIndex, controller.feedDuration.value)
+                              .then((success) {
+                            if (success) {
+                              controller.feedDuration.value = 0;
+                              Get.back();
+                              Get.snackbar(
+                                "Berhasil",
+                                "Durasi berhasil diubah",
+                                backgroundColor: Colors.green,
+                                colorText: Colors.white,
+                                isDismissible: true,
+                                forwardAnimationCurve: Curves.ease,
+                                duration: const Duration(seconds: 1),
+                              );
+                            } else {
+                              Get.snackbar(
+                                "Error",
+                                "Gagal mengubah durasi",
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                            }
+                          }).whenComplete(() {
+                            controller.isButtonDisabled.value = false;
+                          });
+                        },
                   child: Text(
                     "Pilih",
                     style: TextStyle(
@@ -191,7 +199,8 @@ class DurationPickerBottomSheet extends StatelessWidget {
               onSelectedItemChanged: (int index) {
                 controller.feedDuration.value = index;
               },
-              children: List<Widget>.generate(60, (index) => Center(child: Text('$index'))),
+              children: List<Widget>.generate(
+                  60, (index) => Center(child: Text('$index'))),
             ),
           ),
         ],
@@ -199,3 +208,4 @@ class DurationPickerBottomSheet extends StatelessWidget {
     );
   }
 }
+

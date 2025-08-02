@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:akuabot/app/data/models/home_model.dart';
 import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:akuabot/app/data/mock_data.dart';
 
 // ... import yang sudah ada tetap sama
 
@@ -12,8 +14,11 @@ class HomeController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
 
+  final bool isMockMode = true; // Set true to use mock data
+
   RxList<HomeModel> homeList = <HomeModel>[].obs;
-  RxList<Map<String, dynamic>> schedulesController = <Map<String, dynamic>>[].obs;
+  RxList<Map<String, dynamic>> schedulesController =
+      <Map<String, dynamic>>[].obs;
   RxInt feedDuration = 0.obs;
   RxBool isButtonDisabled = false.obs;
   RxInt pakanStatus = 0.obs;
@@ -29,13 +34,19 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchAllData();
-    fetchJadwalPakan(); // Ambil dari server
-    startAutoUpdate();
-
-    ever(ipController.ip, (_) {
+    if (isMockMode) {
+      print('App is in mock mode. Fetching initial mock data.');
+      fetchMockData();
+    } else {
+      print('App is in live mode. Fetching initial data from server.');
       fetchAllData();
-      fetchJadwalPakan(); // Ambil ulang saat IP berubah
+      startAutoUpdate();
+    }
+    ever(ipController.ip, (_) {
+      if (!isMockMode) {
+        fetchAllData(); // Ambil ulang data saat IP berubah
+        fetchJadwalPakan(); // Ambil ulang saat IP berubah
+      }
     });
   }
 
@@ -45,8 +56,15 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
+  void fetchMockData() {
+    fetchSensorData();
+    fetchJadwalPakan();
+    fetchPakanStatus();
+    fetchSiramStatus();
+  }
+
   void startAutoUpdate() {
-    dataTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    dataTimer = Timer.periodic(const Duration(seconds: 2), (_) {
       fetchAllData();
     });
   }
@@ -60,6 +78,13 @@ class HomeController extends GetxController {
   // ------------------ Sensor Fetching ------------------ //
 
   Future<void> fetchSensorData() async {
+    if (isMockMode) {
+      final mockData = mockSensorData();
+      addDataToHomeModel(mockData);
+      //homeList.refresh();
+      print('Using mock sensor data for UI development.');
+      return; // Exit the method
+    }
     try {
       final endpoints = {
         'ph': '/api/value/ph',
@@ -75,7 +100,9 @@ class HomeController extends GetxController {
 
         if (response.statusCode == 200) {
           final decoded = jsonDecode(response.body);
-          if (decoded['status'] == true && decoded['data'] != null && decoded['data'].isNotEmpty) {
+          if (decoded['status'] == true &&
+              decoded['data'] != null &&
+              decoded['data'].isNotEmpty) {
             final value = decoded['data'][0];
             sensorData[key] = value[key];
           } else {
@@ -97,6 +124,11 @@ class HomeController extends GetxController {
   // ------------------ Status Fetching ------------------ //
 
   Future<void> fetchPakanStatus() async {
+    if (isMockMode) {
+      pakanStatus.value = 1; // 1 for active, 0 for inactive
+      print('Using mock pakan status for UI development.');
+      return;
+    }
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/pakan/get'));
 
@@ -115,6 +147,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchSiramStatus() async {
+    if (isMockMode) {
+      siramStatus.value = 0; // 1 for active, 0 for inactive
+      print('Using mock siram status for UI development.');
+      return;
+    }
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/siram/get'));
       if (response.statusCode == 200) {
@@ -134,6 +171,11 @@ class HomeController extends GetxController {
   // ------------------ Schedule API ------------------ //
 
   Future<void> fetchJadwalPakan() async {
+    if (isMockMode) {
+      schedulesController.value = mockScheduleData();
+      print('Using mock schedule data for UI development.');
+      return; // Exit the method
+    }
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/schedule/get'));
       if (response.statusCode == 200) {
@@ -145,21 +187,24 @@ class HomeController extends GetxController {
             {
               'id': 1,
               'title': 'Jadwal Pagi',
-              'schedule': schedule['pagi']['tanggal'] + "T" + schedule['pagi']['jam'],
+              'schedule':
+                  schedule['pagi']['tanggal'] + "T" + schedule['pagi']['jam'],
               'duration': schedule['pagi']['durasi'],
               'isActive': schedule['pagi']['status'],
             },
             {
               'id': 2,
               'title': 'Jadwal Siang',
-              'schedule': schedule['siang']['tanggal'] + "T" + schedule['siang']['jam'],
+              'schedule':
+                  schedule['siang']['tanggal'] + "T" + schedule['siang']['jam'],
               'duration': schedule['siang']['durasi'],
               'isActive': schedule['siang']['status'],
             },
             {
               'id': 3,
               'title': 'Jadwal Malam',
-              'schedule': schedule['malam']['tanggal'] + "T" + schedule['malam']['jam'],
+              'schedule':
+                  schedule['malam']['tanggal'] + "T" + schedule['malam']['jam'],
               'duration': schedule['malam']['durasi'],
               'isActive': schedule['malam']['status'],
             }
@@ -171,7 +216,12 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> updateJadwalPakan(int id, String slot, Map<String, dynamic> data) async {
+  Future<void> updateJadwalPakan(
+      int id, String slot, Map<String, dynamic> data) async {
+    if (isMockMode) {
+      print("Jadwal $slot berhasil diupdate (MOCK).");
+      return;
+    }
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/schedule/update/$id'),
@@ -192,6 +242,10 @@ class HomeController extends GetxController {
   // ------------------ Status Update ------------------ //
 
   Future<void> updatePakanStatus(int status) async {
+    if (isMockMode) {
+      pakanStatus.value = status;
+      return;
+    }
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/pakan/update'),
@@ -211,6 +265,10 @@ class HomeController extends GetxController {
   }
 
   Future<void> updateSiramStatus(int status) async {
+    if (isMockMode) {
+      siramStatus.value = status;
+      return;
+    }
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/siram/update'),
@@ -233,12 +291,13 @@ class HomeController extends GetxController {
 
   void addDataToHomeModel(Map<String, dynamic> data) {
     homeList.clear();
-
     homeList.addAll([
       HomeModel(
         key: 'kelembaban',
         title: 'Kelembaban',
-        value: data['kelembaban'] != null ? "${data['kelembaban'].toStringAsFixed(1)} %" : "-",
+        value: data['kelembaban'] != null
+            ? "${data['kelembaban'].toStringAsFixed(1)} %"
+            : "-",
         image: 'assets/images/home_icons/humidity.png',
       ),
       HomeModel(
@@ -250,35 +309,45 @@ class HomeController extends GetxController {
       HomeModel(
         key: 'kualitasAir',
         title: 'Kualitas Air',
-        value: data['nutrisi'] != null ? "${data['nutrisi'].toStringAsFixed(0)} PPM" : "-",
+        value: data['nutrisi'] != null
+            ? "${data['nutrisi'].toStringAsFixed(0)} PPM"
+            : "-",
         image: 'assets/images/home_icons/water_quality.png',
       ),
       HomeModel(
         key: 'temperatur',
         title: 'Temperatur',
-        value: data['suhu'] != null ? "${data['suhu'].toStringAsFixed(1)} °C" : "-",
+        value: data['suhu'] != null
+            ? "${data['suhu'].toStringAsFixed(1)} °C"
+            : "-",
         image: 'assets/images/home_icons/temperature.png',
       ),
     ]);
   }
 
   void checkThresholds(Map<String, dynamic> data) {
-    if (data['kelembaban'] != null && data['kelembaban'] < humidityThreshold) {
-      Get.snackbar(
-        "Peringatan Kelembaban",
-        "Kelembaban udara rendah (${data['kelembaban'].toStringAsFixed(1)}%). Segera siram tanaman!",
-        backgroundColor: const Color(0xffFFCDD2),
-        colorText: const Color(0xffB71C1C),
-      );
-    }
-    if (data['nutrisi'] != null && data['nutrisi'] < qualityThreshold) {
-      Get.snackbar("Peringatan Kualitas Air", "Kualitas air rendah (${data['nutrisi'].toStringAsFixed(0)} PPM)");
-    }
-    if (data['ph'] != null && data['ph'] < phThreshold) {
-      Get.snackbar("Peringatan pH Air", "pH air terlalu rendah (${data['ph'].toStringAsFixed(2)})");
-    }
-    if (data['suhu'] != null && data['suhu'] < tempThreshold) {
-      Get.snackbar("Peringatan Temperatur", "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
+    if (!isMockMode) {
+      if (data['kelembaban'] != null &&
+          data['kelembaban'] < humidityThreshold) {
+        Get.snackbar(
+          "Peringatan Kelembaban",
+          "Kelembaban udara rendah (${data['kelembaban'].toStringAsFixed(1)}%). Segera siram tanaman!",
+          backgroundColor: const Color(0xffFFCDD2),
+          colorText: const Color(0xffB71C1C),
+        );
+      }
+      if (data['nutrisi'] != null && data['nutrisi'] < qualityThreshold) {
+        Get.snackbar("Peringatan Kualitas Air",
+            "Kualitas air rendah (${data['nutrisi'].toStringAsFixed(0)} PPM)");
+      }
+      if (data['ph'] != null && data['ph'] < phThreshold) {
+        Get.snackbar("Peringatan pH Air",
+            "pH air terlalu rendah (${data['ph'].toStringAsFixed(2)})");
+      }
+      if (data['suhu'] != null && data['suhu'] < tempThreshold) {
+        Get.snackbar("Peringatan Temperatur",
+            "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
+      }
     }
   }
 
@@ -290,6 +359,12 @@ class HomeController extends GetxController {
   // ------------------ Schedule Update ------------------ //
 
   Future<bool> updateScheduleTime(int index, DateTime newDate) async {
+    if (isMockMode) {
+      if (index < 0 || index >= schedulesController.length) return false;
+      schedulesController[index]['schedule'] = newDate.toIso8601String();
+      schedulesController.refresh();
+      return true;
+    }
     if (index < 0 || index >= schedulesController.length) return false;
     schedulesController[index]['schedule'] = newDate.toIso8601String();
     schedulesController.refresh();
@@ -298,6 +373,12 @@ class HomeController extends GetxController {
   }
 
   Future<bool> updateScheduleDuration(int index, int duration) async {
+    if (isMockMode) {
+      if (index < 0 || index >= schedulesController.length) return false;
+      schedulesController[index]['duration'] = duration;
+      schedulesController.refresh();
+      return true;
+    }
     if (index < 0 || index >= schedulesController.length) return false;
     schedulesController[index]['duration'] = duration;
     schedulesController.refresh();
@@ -306,6 +387,12 @@ class HomeController extends GetxController {
   }
 
   Future<bool> updateScheduleActiveStatus(int index, bool isActive) async {
+    if (isMockMode) {
+      if (index < 0 || index >= schedulesController.length) return false;
+      schedulesController[index]['isActive'] = isActive;
+      schedulesController.refresh();
+      return true;
+    }
     if (index < 0 || index >= schedulesController.length) return false;
     schedulesController[index]['isActive'] = isActive;
     schedulesController.refresh();
@@ -313,3 +400,4 @@ class HomeController extends GetxController {
     return true;
   }
 }
+
