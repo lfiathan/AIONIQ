@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:akuabot/app/constant/app_colors.dart';
 import 'package:get/get.dart';
 import '../controllers/education_controller.dart';
 
@@ -8,7 +9,7 @@ class EducationView extends GetView<EducationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff60AB4D),
+      backgroundColor: AppColors.normalBlue,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -30,9 +31,6 @@ class EducationView extends GetView<EducationController> {
                             const Icon(Icons.arrow_back_ios_new_outlined,
                                 color: Colors.white, size: 22),
                             const SizedBox(width: 6),
-                            const Text('Kembali',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16)),
                           ],
                         ),
                       ),
@@ -125,7 +123,7 @@ class EducationView extends GetView<EducationController> {
               child: Container(
                 width: 230,
                 decoration: const BoxDecoration(
-                  color: Color(0xff60AB4D),
+                  color: AppColors.normalBlue,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     bottomLeft: Radius.circular(15),

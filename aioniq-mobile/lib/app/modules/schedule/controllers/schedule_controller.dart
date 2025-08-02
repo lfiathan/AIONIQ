@@ -1,22 +1,19 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:akuabot/app/data/mock_data.dart';
 import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
-import 'package:intl/intl.dart';
 
 class ScheduleController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
-  final bool isMockMode = true;
+  final bool isMockMode = false;
 
   Rx<DateTime> selectedDay = DateTime.now().obs;
   RxList<Map<String, dynamic>> schedulesController =
       <Map<String, dynamic>>[].obs;
   RxInt feedDuration = 0.obs;
   RxBool isButtonDisabled = false.obs;
-  // Variabel userId dan baseUrl dihapus karena sudah ada di IpController
 
   @override
   void onInit() {

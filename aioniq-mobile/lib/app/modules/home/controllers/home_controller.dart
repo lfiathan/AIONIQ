@@ -1,20 +1,17 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:akuabot/app/data/models/home_model.dart';
 import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
 import 'package:akuabot/app/data/mock_data.dart';
 
-// ... import yang sudah ada tetap sama
-
 class HomeController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
 
-  final bool isMockMode = true; // Set true to use mock data
+  final bool isMockMode = false; // Set true to use mock data
 
   RxList<HomeModel> homeList = <HomeModel>[].obs;
   RxList<Map<String, dynamic>> schedulesController =
@@ -30,6 +27,7 @@ class HomeController extends GetxController {
   final double qualityThreshold = 1000.0;
   final double phThreshold = 7.0;
   final double tempThreshold = 22.0;
+  final double amoniaThreshold = 0.200;
 
   @override
   void onInit() {
@@ -91,6 +89,7 @@ class HomeController extends GetxController {
         'kelembaban': '/api/value/kelembaban',
         'nutrisi': '/api/value/nutrisi',
         'suhu': '/api/value/suhu',
+        'amonia': '/api/value/amonia',
       };
 
       Map<String, dynamic> sensorData = {};
@@ -322,6 +321,14 @@ class HomeController extends GetxController {
             : "-",
         image: 'assets/images/home_icons/temperature.png',
       ),
+      HomeModel(
+        key: 'amonia',
+        title: 'Kadar Amonia',
+        value: data['amonia'] != null
+            ? "${data['amonia'].toStringAsFixed(3)} mg/l"
+            : "-",
+        image: 'assets/images/home_icons/nh3_icon.png',
+      ),
     ]);
   }
 
@@ -347,6 +354,15 @@ class HomeController extends GetxController {
       if (data['suhu'] != null && data['suhu'] < tempThreshold) {
         Get.snackbar("Peringatan Temperatur",
             "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
+      }
+      if (data['amonia'] != null && data['amonia'] > amoniaThreshold) {
+        // <-- Logika amonia
+        Get.snackbar(
+          "Peringatan Amonia",
+          "Kadar amonia terlalu tinggi (${data['amonia'].toStringAsFixed(3)} mg/l).",
+          backgroundColor: const Color(0xffFFCDD2),
+          colorText: const Color(0xffB71C1C),
+        );
       }
     }
   }
@@ -400,4 +416,3 @@ class HomeController extends GetxController {
     return true;
   }
 }
-
