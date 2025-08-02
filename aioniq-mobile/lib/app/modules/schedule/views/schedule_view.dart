@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:hawk_fab_menu/hawk_fab_menu.dart';
 import 'package:akuabot/app/constant/app_colors.dart';
 import '../controllers/schedule_controller.dart';
 
@@ -11,8 +10,6 @@ class ScheduleView extends GetView<ScheduleController> {
 
   @override
   Widget build(BuildContext context) {
-    HawkFabMenuController hawkFabMenuController = HawkFabMenuController();
-
     return Scaffold(
       backgroundColor: AppColors.normalBlue,
       body: SafeArea(

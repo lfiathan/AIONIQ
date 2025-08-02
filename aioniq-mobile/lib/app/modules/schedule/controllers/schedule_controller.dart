@@ -81,4 +81,44 @@ class ScheduleController extends GetxController {
       return false;
     }
   }
+
+  // Kirim request siram tanaman sekarang ke API
+  Future<void> waterNow() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/watering'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(
+            {'userId': userId, 'schedule': DateTime.now().toIso8601String()}),
+      );
+      if (response.statusCode == 200) {
+        Get.snackbar("Berhasil", "Tanaman telah disiram",
+            backgroundColor: Colors.green, colorText: Colors.white);
+      } else {
+        Get.snackbar("Error", "Gagal menyiram tanaman");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Terjadi kesalahan: $e");
+    }
+  }
+
+  // Kirim request beri pakan sekarang ke API
+  Future<void> feedNow() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/feeding'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(
+            {'userId': userId, 'schedule': DateTime.now().toIso8601String()}),
+      );
+      if (response.statusCode == 200) {
+        Get.snackbar("Berhasil", "Pakan telah diberikan",
+            backgroundColor: Colors.green, colorText: Colors.white);
+      } else {
+        Get.snackbar("Error", "Gagal memberi pakan");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Terjadi kesalahan: $e");
+    }
+  }
 }
