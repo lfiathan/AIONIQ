@@ -14,7 +14,8 @@ class ScheduleController extends GetxController {
   Rx<DateTime> selectedDay = DateTime.now().obs;
   RxList<Map<String, dynamic>> schedulesController =
       <Map<String, dynamic>>[].obs;
-
+  RxInt feedDuration = 0.obs;
+  RxBool isButtonDisabled = false.obs;
   // Variabel userId dan baseUrl dihapus karena sudah ada di IpController
 
   @override
@@ -22,6 +23,7 @@ class ScheduleController extends GetxController {
     super.onInit();
     fetchJadwalPakan();
   }
+  // ------------------ Schedule API ------------------ //
 
   Future<void> fetchJadwalPakan() async {
     if (isMockMode) {
@@ -89,6 +91,7 @@ class ScheduleController extends GetxController {
       print("Error updateJadwalPakan: $e");
     }
   }
+  // ------------------ Schedule Update ------------------ //
 
   Future<bool> updateScheduleTime(int index, DateTime newDate) async {
     if (isMockMode) {
@@ -132,4 +135,3 @@ class ScheduleController extends GetxController {
     return true;
   }
 }
-
