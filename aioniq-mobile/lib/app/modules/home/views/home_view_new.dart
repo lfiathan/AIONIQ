@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:akuabot/app/modules/home/controllers/home_controller.dart';
 import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
-import 'package:akuabot/app/modules/home/widgets/home_header_widget.dart';
-import 'package:akuabot/app/modules/home/widgets/build_schedules_widget.dart';
 import 'package:akuabot/app/routes/app_pages.dart';
+import 'package:akuabot/app/constant/app_colors.dart';
+import 'package:akuabot/app/data/models/home_model.dart'; // Impor HomeModel
 
 class HomeViewNew extends GetView<HomeController> {
   const HomeViewNew({Key? key}) : super(key: key);
@@ -14,202 +14,155 @@ class HomeViewNew extends GetView<HomeController> {
     final IpController ipController = Get.find<IpController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xffF0F9EE),
+      backgroundColor: AppColors.normalBlue,
       body: Stack(
         children: [
+          // Header background
           Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
+            alignment: Alignment.topCenter,
+            child: Container(
               width: Get.width,
-              child: Image.asset(
-                'assets/images/home/background.png',
-                fit: BoxFit.cover,
+              height: Get.height * 0.2,
+              decoration: const BoxDecoration(
+                color: AppColors.normalBlue,
               ),
             ),
           ),
-          // HEADER + Running Text
+          // Konten Utama dengan latar belakang putih dan sudut melengkung
           Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Obx(() {
-                  final ip = ipController.ip.value;
-                  return Container(
-                    width: double.infinity,
-                    color: const Color(0xff1A3C40),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        'Aplikasi ini berjalan pada server: $ip',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-                SizedBox(
-                  width: Get.width,
-                  child: Image.asset(
-                    'assets/images/home/homepage_header.png',
-                    fit: BoxFit.cover,
-                  ),
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: Get.width,
+              height: Get.height * 0.8,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
-              ],
+              ),
             ),
           ),
           SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: ConstrainedBox(
-                    constraints:
-                        BoxConstraints(minHeight: constraints.maxHeight),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  // Header Halaman
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 80),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 30, 20, 25),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Icon(
-                                Icons.notifications_none_rounded,
-                                color: Colors.transparent,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'AIONIQ',
+                              style: Get.textTheme.headlineLarge!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                        ),
-                        const HomeHeaderWidget(),
-                        _sectionTitle('Status Sensor'),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color:
-                                      const Color(0xff000000).withOpacity(0.05),
-                                  blurRadius: 15,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Obx(() {
-                                  if (controller.homeList.isEmpty) {
-                                    return const Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                  final sensorItems = [
-                                    {
-                                      'icon':
-                                          'assets/images/home_icons/humidity.png',
-                                      'title': 'Kelembaban',
-                                      'value': controller
-                                          .getSensorValue('kelembaban'),
-                                    },
-                                    {
-                                      'icon': 'assets/images/home_icons/ph.png',
-                                      'title': 'pH Air',
-                                      'value': controller.getSensorValue('ph'),
-                                    },
-                                    {
-                                      'icon':
-                                          'assets/images/home_icons/water_quality.png',
-                                      'title': 'Kualitas Air',
-                                      'value': controller
-                                          .getSensorValue('kualitasAir'),
-                                    },
-                                    {
-                                      'icon':
-                                          'assets/images/home_icons/temperature.png',
-                                      'title': 'Suhu Air',
-                                      'value': controller
-                                          .getSensorValue('temperatur'),
-                                    },
-                                  ];
-                                  return Column(
-                                    children: [
-                                      GridView.builder(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        itemCount: sensorItems.length,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 10,
-                                          mainAxisSpacing: 10,
-                                          childAspectRatio: 3.5,
-                                        ),
-                                        itemBuilder: (context, index) {
-                                          final item = sensorItems[index];
-                                          return _buildSensorTile(
-                                            item['icon']!,
-                                            item['title']!,
-                                            item['value']!,
-                                          );
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                      GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(Routes.EDUCATION);
-                                        },
-                                        child: const Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            'Pelajari Lebih Lanjut',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                              color: Color(0xff60AB4D),
-                                              decoration:
-                                                  TextDecoration.underline,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }),
-                              ],
+                            IconButton(
+                              icon: const Icon(Icons.settings,
+                                  color: AppColors.white),
+                              onPressed: () {
+                                Get.toNamed(Routes.IP);
+                              },
                             ),
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        _sectionTitle('Penjadwalan Pakan'),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: BuildSchedulesWidget(),
-                        ),
-                        _sectionTitle('Aksi Cepat'),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: _buildQuickActions(constraints),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 8),
+                        Obx(() {
+                          final ip = ipController.ip.value;
+                          return Text(
+                            'Aplikasi ini berjalan pada server: $ip',
+                            style: Get.textTheme.bodySmall!.copyWith(
+                              color: Colors.white70,
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ),
-                );
-              },
+                  const SizedBox(height: 60),
+
+                  // Kartu Status Sensor Utama
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _sectionTitle('Status Sensor'),
+                          const SizedBox(height: 10),
+                          Obx(() {
+                            if (controller.homeList.isEmpty) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            final sensorItems = controller.homeList;
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 4, // Tampilkan 4 item utama
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 15,
+                                crossAxisSpacing: 15,
+                                childAspectRatio: 1.0,
+                              ),
+                              itemBuilder: (context, index) {
+                                final item = sensorItems[index];
+                                return _buildSensorCard(
+                                    item.image, item.title, item.value);
+                              },
+                            );
+                          }),
+                          const SizedBox(height: 20),
+                          // Kartu Kadar Amonia
+                          Obx(() {
+                            final amoniaItem = controller.homeList
+                                .firstWhereOrNull((e) => e.key == 'amonia');
+                            if (amoniaItem == null)
+                              return const SizedBox.shrink();
+                            return Center(
+                              child: _buildSensorCard(
+                                amoniaItem.image,
+                                amoniaItem.title,
+                                amoniaItem.value,
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.center,
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.EDUCATION);
+                      },
+                      child: const Text(
+                        'Pelajari Lebih Lanjut',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.darkerBlue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -218,177 +171,53 @@ class HomeViewNew extends GetView<HomeController> {
   }
 
   Widget _sectionTitle(String name) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      child: Text(
-        name,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Color(0xff4D4D4D),
-        ),
+    return Text(
+      name,
+      style: Get.textTheme.titleLarge!.copyWith(
+        color: AppColors.darkerBlue,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
 
-  List<Widget> _buildQuickActions(BoxConstraints constraints) {
-    return [
-      _buildQuickAction('Pemberian Pakan', 'Pemberian pakan secara manual',
-          'assets/images/home_icons/fish_icon.png', 'feed', constraints),
-      const SizedBox(height: 10),
-      _buildQuickAction('Penyemprotan Air', 'Penyemprotan air secara manual',
-          'assets/images/home_icons/plant_icon.png', 'water', constraints),
-    ];
-  }
-
-  Widget _buildQuickAction(String title, String subtitle, String icon,
-      String actionType, BoxConstraints constraints) {
+  Widget _buildSensorCard(String iconPath, String title, String value) {
     return Container(
-      height: constraints.maxHeight * 0.08,
+      width: Get.width * 0.4,
+      height: Get.width * 0.4,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.lightBlue,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+            color: AppColors.normalBlue.withOpacity(0.3), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xff000000).withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Row(
-        children: [
-          Image.asset(icon, width: 30, height: 30),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold)),
-                Text(subtitle,
-                    style: const TextStyle(fontSize: 9, color: Colors.grey)),
-              ],
-            ),
-          ),
-          GestureDetector(
-            onTap: () async {
-              if (actionType == 'feed') {
-                await controller.updatePakanStatus(1);
-              } else if (actionType == 'water') {
-                await controller.updateSiramStatus(1);
-              }
-
-              Get.dialog(
-                barrierDismissible: false,
-                Dialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  backgroundColor: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          actionType == 'feed'
-                              ? 'assets/gif/fish.gif'
-                              : 'assets/gif/plant.gif',
-                          width: 150,
-                          height: 150,
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Sedang melakukan aksi...',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 20),
-                        GestureDetector(
-                          onTap: () async {
-                            if (actionType == 'feed') {
-                              await controller.updatePakanStatus(0);
-                            } else if (actionType == 'water') {
-                              await controller.updateSiramStatus(0);
-                            }
-                            Get.back();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xff60AB4D),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Text(
-                              'Selesai',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: const Color(0xff60AB4D),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const Text(
-                'Lakukan',
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSensorTile(String iconPath, String title, String value) {
-    return Container(
-      width: 160,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xffF8F8F8),
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Row(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(iconPath, width: 24, height: 24),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 11, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis),
-                Text(value,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey)),
-              ],
+          Image.asset(iconPath,
+              width: 40, height: 40, color: AppColors.normalBlue),
+          const SizedBox(height: 10),
+          Text(
+            value,
+            style: Get.textTheme.titleMedium!.copyWith(
+              color: AppColors.darkerBlue,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: Get.textTheme.bodySmall!.copyWith(
+              color: AppColors.darkerBlue,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
