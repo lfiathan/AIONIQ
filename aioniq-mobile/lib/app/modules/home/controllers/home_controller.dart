@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:akuabot/app/data/models/home_model.dart';
 import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
 import 'package:akuabot/app/data/mock_data.dart';
-
-// ... import yang sudah ada tetap sama
 
 class HomeController extends GetxController {
   final IpController ipController = Get.find<IpController>();
