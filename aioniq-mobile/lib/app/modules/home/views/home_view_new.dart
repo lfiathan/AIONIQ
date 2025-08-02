@@ -33,7 +33,7 @@ class HomeViewNew extends GetView<HomeController> {
             alignment: Alignment.bottomCenter,
             child: Container(
               width: Get.width,
-              height: Get.height * 0.8,
+              height: Get.height * 0.85,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(

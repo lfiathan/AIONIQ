@@ -14,7 +14,7 @@ class HomeController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
 
-  final bool isMockMode = true; // Set true to use mock data
+  final bool isMockMode = false; // Set true to use mock data
 
   RxList<HomeModel> homeList = <HomeModel>[].obs;
   RxList<Map<String, dynamic>> schedulesController =
