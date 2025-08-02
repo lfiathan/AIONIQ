@@ -1,6 +1,7 @@
 import 'package:akuabot/app/modules/faq/controllers/faq_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:akuabot/app/routes/app_pages.dart';
 
 class FaqView extends GetView<FaqController> {
   const FaqView({Key? key}) : super(key: key);
@@ -38,18 +39,9 @@ class FaqView extends GetView<FaqController> {
               // Header Bar
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 50, 20, 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Colors.white,
-                      ),
-                    ),
                     const Text(
                       'FAQs',
                       style: TextStyle(
@@ -58,9 +50,27 @@ class FaqView extends GetView<FaqController> {
                         color: Colors.white,
                       ),
                     ),
-                    const Icon(
-                      Icons.notifications_none_rounded,
-                      color: Colors.transparent,
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.toNamed(Routes.SETTING);
+                        },
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(99),
+                          ),
+                          padding: const EdgeInsets.all(5),
+                          child: const Icon(
+                            Icons.info_outline_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

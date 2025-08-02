@@ -20,49 +20,6 @@ class HomeHeaderWidget extends GetView<HomeController> {
           ),
           Row(
             children: [
-              // Tombol FAQ
-              GestureDetector(
-                onTap: () {
-                  Get.toNamed(Routes.FAQ);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(99),
-                  ),
-                  child: const Icon(
-                    Icons.question_mark,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 10),
-
-              //Tombol Setting
-              GestureDetector(
-                onTap: () {
-                  Get.toNamed(Routes.SETTING);
-                },
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(99),
-                  ),
-                  padding: const EdgeInsets.all(5),
-                  child: Image.asset(
-                    'assets/images/home_icons/mini_icons.png',
-                  ),
-                ),
-              ),
-
-              const SizedBox(width: 10),
-
               // Tombol IP Server
               GestureDetector(
                 onTap: () {
