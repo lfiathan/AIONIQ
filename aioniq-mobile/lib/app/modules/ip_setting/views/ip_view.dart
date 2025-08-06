@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:akuabot/app/constant/app_colors.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
 import '../controllers/ip_controller.dart';
 import '../../home/controllers/home_controller.dart';
 

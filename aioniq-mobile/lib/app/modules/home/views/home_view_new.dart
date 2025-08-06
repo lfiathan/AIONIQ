@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:akuabot/app/modules/home/controllers/home_controller.dart';
-import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
-import 'package:akuabot/app/routes/app_pages.dart';
-import 'package:akuabot/app/constant/app_colors.dart';
-import 'package:akuabot/app/data/models/home_model.dart'; // Impor HomeModel
+import 'package:aioniq/app/modules/home/controllers/home_controller.dart';
+import 'package:aioniq/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:aioniq/app/routes/app_pages.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
 
 class HomeViewNew extends GetView<HomeController> {
   const HomeViewNew({Key? key}) : super(key: key);

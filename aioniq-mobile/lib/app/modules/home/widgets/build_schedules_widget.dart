@@ -1,4 +1,4 @@
-import 'package:akuabot/app/modules/home/controllers/home_controller.dart';
+import 'package:aioniq/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
@@ -208,4 +208,3 @@ class DurationPickerBottomSheet extends StatelessWidget {
     );
   }
 }
-
