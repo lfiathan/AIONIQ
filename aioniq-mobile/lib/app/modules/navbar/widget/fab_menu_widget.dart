@@ -80,7 +80,6 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                             child: TextButton(
                               onPressed: () async {
                                 await controller.updateSiramStatus(1);
-                                Get.back();
                               },
                               child: const Text(
                                 "Ya",
@@ -172,7 +171,6 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                             child: TextButton(
                               onPressed: () async {
                                 await controller.updatePakanStatus(1);
-                                Get.back();
                               },
                               child: const Text(
                                 "Ya",
