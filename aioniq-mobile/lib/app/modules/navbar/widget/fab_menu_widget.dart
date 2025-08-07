@@ -65,7 +65,7 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                                 Get.back();
                               },
                               child: const Text(
-                                "Batal",
+                                "Stop",
                                 style: TextStyle(color: Color(0xff334893)),
                               ),
                             ),
@@ -156,7 +156,7 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                                 Get.back();
                               },
                               child: const Text(
-                                "Batal",
+                                "Stop",
                                 style: TextStyle(color: Color(0xff334893)),
                               ),
                             ),
@@ -194,3 +194,4 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
     ),
   ];
 }
+

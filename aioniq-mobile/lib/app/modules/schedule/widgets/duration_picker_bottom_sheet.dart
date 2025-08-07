@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:aioniq/app/constant/app_colors.dart';
 import '../controllers/schedule_controller.dart';
+import 'package:aioniq/app/modules/home/controllers/home_controller.dart';
 
 class DurationPickerBottomSheet extends StatelessWidget {
   final int scheduleIndex;
@@ -10,7 +11,7 @@ class DurationPickerBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScheduleController controller = Get.find();
+    final HomeController controller = Get.find();
 
     return Container(
       height: Get.height * 0.35,
