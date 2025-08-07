@@ -38,11 +38,15 @@ class HomeController extends GetxController {
     } else {
       print('App is in live mode. Fetching initial data from server.');
       fetchAllData();
+      fetchJadwalPakan(); // Ambil dari server
       startAutoUpdate();
     }
+
     ever(ipController.ip, (_) {
-      if (!isMockMode) {
-        fetchAllData(); // Ambil ulang data saat IP berubah
+      if (isMockMode) {
+        fetchMockData(); // Refresh mock data when IP changes
+      } else {
+        fetchAllData();
         fetchJadwalPakan(); // Ambil ulang saat IP berubah
       }
     });
@@ -62,7 +66,7 @@ class HomeController extends GetxController {
   }
 
   void startAutoUpdate() {
-    dataTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+    dataTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       fetchAllData();
     });
   }
@@ -79,10 +83,12 @@ class HomeController extends GetxController {
     if (isMockMode) {
       final mockData = mockSensorData();
       addDataToHomeModel(mockData);
-      //homeList.refresh();
+      checkThresholds(mockData);
+      homeList.refresh();
       print('Using mock sensor data for UI development.');
-      return; // Exit the method
+      return;
     }
+
     try {
       final endpoints = {
         'ph': '/api/value/ph',
@@ -128,6 +134,7 @@ class HomeController extends GetxController {
       print('Using mock pakan status for UI development.');
       return;
     }
+
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/pakan/get'));
 
@@ -151,6 +158,7 @@ class HomeController extends GetxController {
       print('Using mock siram status for UI development.');
       return;
     }
+
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/siram/get'));
       if (response.statusCode == 200) {
@@ -173,8 +181,9 @@ class HomeController extends GetxController {
     if (isMockMode) {
       schedulesController.value = mockScheduleData();
       print('Using mock schedule data for UI development.');
-      return; // Exit the method
+      return;
     }
+
     try {
       final response = await http.get(Uri.parse('$baseUrl/api/schedule/get'));
       if (response.statusCode == 200) {
@@ -221,6 +230,7 @@ class HomeController extends GetxController {
       print("Jadwal $slot berhasil diupdate (MOCK).");
       return;
     }
+
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/schedule/update/$id'),
@@ -243,8 +253,10 @@ class HomeController extends GetxController {
   Future<void> updatePakanStatus(int status) async {
     if (isMockMode) {
       pakanStatus.value = status;
+      print('Updated pakan status to $status (MOCK).');
       return;
     }
+
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/pakan/update'),
@@ -266,8 +278,10 @@ class HomeController extends GetxController {
   Future<void> updateSiramStatus(int status) async {
     if (isMockMode) {
       siramStatus.value = status;
+      print('Updated siram status to $status (MOCK).');
       return;
     }
+
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/siram/update'),
@@ -290,6 +304,7 @@ class HomeController extends GetxController {
 
   void addDataToHomeModel(Map<String, dynamic> data) {
     homeList.clear();
+
     homeList.addAll([
       HomeModel(
         key: 'kelembaban',
@@ -333,37 +348,36 @@ class HomeController extends GetxController {
   }
 
   void checkThresholds(Map<String, dynamic> data) {
-    if (!isMockMode) {
-      if (data['kelembaban'] != null &&
-          data['kelembaban'] < humidityThreshold) {
-        Get.snackbar(
-          "Peringatan Kelembaban",
-          "Kelembaban udara rendah (${data['kelembaban'].toStringAsFixed(1)}%). Segera siram tanaman!",
-          backgroundColor: const Color(0xffFFCDD2),
-          colorText: const Color(0xffB71C1C),
-        );
-      }
-      if (data['nutrisi'] != null && data['nutrisi'] < qualityThreshold) {
-        Get.snackbar("Peringatan Kualitas Air",
-            "Kualitas air rendah (${data['nutrisi'].toStringAsFixed(0)} PPM)");
-      }
-      if (data['ph'] != null && data['ph'] < phThreshold) {
-        Get.snackbar("Peringatan pH Air",
-            "pH air terlalu rendah (${data['ph'].toStringAsFixed(2)})");
-      }
-      if (data['suhu'] != null && data['suhu'] < tempThreshold) {
-        Get.snackbar("Peringatan Temperatur",
-            "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
-      }
-      if (data['amonia'] != null && data['amonia'] > amoniaThreshold) {
-        // <-- Logika amonia
-        Get.snackbar(
-          "Peringatan Amonia",
-          "Kadar amonia terlalu tinggi (${data['amonia'].toStringAsFixed(3)} mg/l).",
-          backgroundColor: const Color(0xffFFCDD2),
-          colorText: const Color(0xffB71C1C),
-        );
-      }
+    // Skip threshold checks in mock mode to avoid spam notifications during development
+    if (isMockMode) return;
+
+    if (data['kelembaban'] != null && data['kelembaban'] < humidityThreshold) {
+      Get.snackbar(
+        "Peringatan Kelembaban",
+        "Kelembaban udara rendah (${data['kelembaban'].toStringAsFixed(1)}%). Segera siram tanaman!",
+        backgroundColor: const Color(0xffFFCDD2),
+        colorText: const Color(0xffB71C1C),
+      );
+    }
+    if (data['nutrisi'] != null && data['nutrisi'] < qualityThreshold) {
+      Get.snackbar("Peringatan Kualitas Air",
+          "Kualitas air rendah (${data['nutrisi'].toStringAsFixed(0)} PPM)");
+    }
+    if (data['ph'] != null && data['ph'] < phThreshold) {
+      Get.snackbar("Peringatan pH Air",
+          "pH air terlalu rendah (${data['ph'].toStringAsFixed(2)})");
+    }
+    if (data['suhu'] != null && data['suhu'] < tempThreshold) {
+      Get.snackbar("Peringatan Temperatur",
+          "Suhu air rendah (${data['suhu'].toStringAsFixed(1)}°C)");
+    }
+    if (data['amonia'] != null && data['amonia'] > amoniaThreshold) {
+      Get.snackbar(
+        "Peringatan Amonia",
+        "Kadar amonia terlalu tinggi (${data['amonia'].toStringAsFixed(3)} mg/l).",
+        backgroundColor: const Color(0xffFFCDD2),
+        colorText: const Color(0xffB71C1C),
+      );
     }
   }
 
@@ -375,13 +389,15 @@ class HomeController extends GetxController {
   // ------------------ Schedule Update ------------------ //
 
   Future<bool> updateScheduleTime(int index, DateTime newDate) async {
+    if (index < 0 || index >= schedulesController.length) return false;
+
     if (isMockMode) {
-      if (index < 0 || index >= schedulesController.length) return false;
       schedulesController[index]['schedule'] = newDate.toIso8601String();
       schedulesController.refresh();
+      print('Updated schedule time for index $index (MOCK).');
       return true;
     }
-    if (index < 0 || index >= schedulesController.length) return false;
+
     schedulesController[index]['schedule'] = newDate.toIso8601String();
     schedulesController.refresh();
     await Future.delayed(const Duration(milliseconds: 100));
@@ -389,13 +405,15 @@ class HomeController extends GetxController {
   }
 
   Future<bool> updateScheduleDuration(int index, int duration) async {
+    if (index < 0 || index >= schedulesController.length) return false;
+
     if (isMockMode) {
-      if (index < 0 || index >= schedulesController.length) return false;
       schedulesController[index]['duration'] = duration;
       schedulesController.refresh();
+      print('Updated schedule duration for index $index to $duration (MOCK).');
       return true;
     }
-    if (index < 0 || index >= schedulesController.length) return false;
+
     schedulesController[index]['duration'] = duration;
     schedulesController.refresh();
     await Future.delayed(const Duration(milliseconds: 100));
@@ -403,17 +421,19 @@ class HomeController extends GetxController {
   }
 
   Future<bool> updateScheduleActiveStatus(int index, bool isActive) async {
+    if (index < 0 || index >= schedulesController.length) return false;
+
     if (isMockMode) {
-      if (index < 0 || index >= schedulesController.length) return false;
       schedulesController[index]['isActive'] = isActive;
       schedulesController.refresh();
+      print(
+          'Updated schedule active status for index $index to $isActive (MOCK).');
       return true;
     }
-    if (index < 0 || index >= schedulesController.length) return false;
+
     schedulesController[index]['isActive'] = isActive;
     schedulesController.refresh();
     await Future.delayed(const Duration(milliseconds: 100));
     return true;
   }
 }
-

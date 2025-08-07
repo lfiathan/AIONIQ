@@ -6,8 +6,10 @@ import 'package:win32/win32.dart';
 import '../../../constant/app_colors.dart';
 import '../controllers/navbar_controller.dart';
 
+import 'package:aioniq/app/modules/home/controllers/home_controller.dart';
+
 List<HawkFabMenuItem> fabMenu(BuildContext context) {
-  final controller = Get.find<NavbarController>();
+  final controller = Get.find<HomeController>();
 
   return [
     HawkFabMenuItem(
@@ -50,40 +52,44 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            width: Get.height * 0.15,
-                            height: Get.height * 0.05,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: const Color(0xff334893)),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                controller.updateSiramStatus(0);
-                                Get.back();
-                              },
-                              child: const Text(
-                                "Stop",
-                                style: TextStyle(color: Color(0xff334893)),
+                          GestureDetector(
+                            onTap: () {
+                              controller.updateSiramStatus(0);
+                              Get.back();
+                            },
+                            child: Container(
+                              width: Get.height * 0.15,
+                              height: Get.height * 0.05,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(color: const Color(0xff334893)),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Stop",
+                                  style: TextStyle(color: Color(0xff334893)),
+                                ),
                               ),
                             ),
                           ),
-                          Container(
-                            width: Get.height * 0.15,
-                            height: Get.height * 0.05,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff334893),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: TextButton(
-                              onPressed: () async {
-                                await controller.updateSiramStatus(1);
-                              },
-                              child: const Text(
-                                "Ya",
-                                style: TextStyle(color: Colors.white),
+                          GestureDetector(
+                            onTap: () async {
+                              await controller.updateSiramStatus(1);
+                            },
+                            child: Container(
+                              width: Get.height * 0.15,
+                              height: Get.height * 0.05,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff334893),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Ya",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                           ),
@@ -141,40 +147,44 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                            width: Get.height * 0.15,
-                            height: Get.height * 0.05,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: const Color(0xff334893)),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                controller.updatePakanStatus(0);
-                                Get.back();
-                              },
-                              child: const Text(
-                                "Stop",
-                                style: TextStyle(color: Color(0xff334893)),
+                          GestureDetector(
+                            onTap: () {
+                              controller.updatePakanStatus(0);
+                              Get.back();
+                            },
+                            child: Container(
+                              width: Get.height * 0.15,
+                              height: Get.height * 0.05,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(color: const Color(0xff334893)),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Stop",
+                                  style: TextStyle(color: Color(0xff334893)),
+                                ),
                               ),
                             ),
                           ),
-                          Container(
-                            width: Get.height * 0.15,
-                            height: Get.height * 0.05,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff334893),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: TextButton(
-                              onPressed: () async {
-                                await controller.updatePakanStatus(1);
-                              },
-                              child: const Text(
-                                "Ya",
-                                style: TextStyle(color: Colors.white),
+                          GestureDetector(
+                            onTap: () async {
+                              await controller.updatePakanStatus(1);
+                            },
+                            child: Container(
+                              width: Get.height * 0.15,
+                              height: Get.height * 0.05,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff334893),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Ya",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                           ),

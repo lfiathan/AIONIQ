@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:aioniq/app/constant/app_colors.dart';
 import '../controllers/schedule_controller.dart';
 import '../widgets/duration_picker_bottom_sheet.dart';
+import 'package:aioniq/app/modules/home/controllers/home_controller.dart';
 
-class ScheduleView extends GetView<ScheduleController> {
+class ScheduleView extends GetView<HomeController> {
   const ScheduleView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {

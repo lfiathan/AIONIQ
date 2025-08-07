@@ -17,7 +17,7 @@ class NavbarController extends GetxController {
   String get baseUrl => ipController.baseUrl;
   final String userId = 'testing';
 
-  final bool isMockMode = true; // Set true to use mock data
+  final bool isMockMode = false; // Set true to use mock data
   RxInt pakanStatus = 0.obs;
   RxInt siramStatus = 0.obs;
 

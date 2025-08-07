@@ -7,7 +7,7 @@ import 'package:aioniq/app/modules/ip_setting/controllers/ip_controller.dart';
 class ScheduleController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
-  final bool isMockMode = true;
+  final bool isMockMode = false;
 
   Rx<DateTime> selectedDay = DateTime.now().obs;
   RxList<Map<String, dynamic>> schedulesController =

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
-import '../../schedule/controllers/schedule_controller.dart';
 import '../controllers/navbar_controller.dart';
+
+import 'package:aioniq/app/modules/home/controllers/home_controller.dart';
 
 class NavbarBinding extends Bindings {
   @override
@@ -8,6 +9,8 @@ class NavbarBinding extends Bindings {
     Get.lazyPut<NavbarController>(
       () => NavbarController(),
     );
+    Get.lazyPut<HomeController>(
+      () => HomeController(),
+    );
   }
 }
-
