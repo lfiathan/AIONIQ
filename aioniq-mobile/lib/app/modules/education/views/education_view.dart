@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:akuabot/app/constant/app_colors.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
 import 'package:get/get.dart';
 import '../controllers/education_controller.dart';
 

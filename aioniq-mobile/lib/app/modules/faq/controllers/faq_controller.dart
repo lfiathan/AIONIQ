@@ -23,14 +23,14 @@ class FaqController extends GetxController {
     FaqModel(
         question: 'Bagaimana AIONIQ membantu dalam pengelolaan pakan ikan?',
         answer:
-            'AIONIQ memiliki fitur pemberian pakan otomatis yang dapat dijadwalkan melalui aplikasi. Anda bisa mengatur waktu dan jumlah pakan harian, dan Apens-iot akan memastikan ikan diberi makan tepat waktu dan sesuai jumlah.'),
+            'AIONIQ memiliki fitur pemberian pakan otomatis yang dapat dijadwalkan melalui aplikasi. Anda bisa mengatur waktu dan jumlah pakan harian, dan AIONIQ akan memastikan ikan diberi makan tepat waktu dan sesuai jumlah.'),
     FaqModel(
         question:
             'Dapatkah AIONIQ digunakan dalam skala besar untuk pertanian komersial?',
         answer:
             'Ya, AIONIQ fleksibel dan dapat diskalakan untuk skala kecil maupun besar. Anda bisa menghubungkan beberapa unit AIONIQ dalam satu jaringan untuk memantau dan mengelola lebih banyak tangki atau bedengan tanaman dalam operasi komersial.'),
     FaqModel(
-        question: 'Bagaimana cara melakukan pemeliharaan rutin pada Apens-iot?',
+        question: 'Bagaimana cara melakukan pemeliharaan rutin pada AIONIQ?',
         answer:
             'Pastikan sensor dan unit AIONIQ bebas dari debu dan kotoran, periksa koneksi kabel, dan pastikan software selalu diperbarui. Kami menyediakan manual teknis dan panduan online yang dapat diakses melalui aplikasi untuk membantu pemeliharaan dan perbaikan sederhana.'),
   ];

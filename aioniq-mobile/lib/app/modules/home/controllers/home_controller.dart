@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:akuabot/app/data/models/home_model.dart';
-import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
-import 'package:akuabot/app/data/mock_data.dart';
+import 'package:aioniq/app/data/models/home_model.dart';
+import 'package:aioniq/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:aioniq/app/data/mock_data.dart';
 
 class HomeController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
 
-  final bool isMockMode = false; // Set true to use mock data
+  final bool isMockMode = true; // Set true to use mock data
 
   RxList<HomeModel> homeList = <HomeModel>[].obs;
   RxList<Map<String, dynamic>> schedulesController =

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:akuabot/app/constant/app_colors.dart';
-import 'package:akuabot/app/routes/app_pages.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
+import 'package:aioniq/app/routes/app_pages.dart';
 import '../controllers/faq_controller.dart';
 
 class FaqView extends GetView<FaqController> {

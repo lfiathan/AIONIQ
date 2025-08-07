@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'app/constant/themeData.dart';
 import 'app/routes/app_pages.dart';
-import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:aioniq/app/modules/ip_setting/controllers/ip_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: themeData(context),
-      title: "Apens-iot",
+      title: "AIONIQ",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     );

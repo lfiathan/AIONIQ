@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:akuabot/app/data/mock_data.dart';
-import 'package:akuabot/app/modules/ip_setting/controllers/ip_controller.dart';
+import 'package:aioniq/app/data/mock_data.dart';
+import 'package:aioniq/app/modules/ip_setting/controllers/ip_controller.dart';
 
 class ScheduleController extends GetxController {
   final IpController ipController = Get.find<IpController>();
   String get baseUrl => ipController.baseUrl;
-  final bool isMockMode = false;
+  final bool isMockMode = true;
 
   Rx<DateTime> selectedDay = DateTime.now().obs;
   RxList<Map<String, dynamic>> schedulesController =

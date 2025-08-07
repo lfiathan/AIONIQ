@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hawk_fab_menu/hawk_fab_menu.dart';
+import 'package:win32/win32.dart';
 import '../../../constant/app_colors.dart';
 import '../controllers/navbar_controller.dart';
 
@@ -60,6 +61,7 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                             ),
                             child: TextButton(
                               onPressed: () {
+                                controller.updateSiramStatus(0);
                                 Get.back();
                               },
                               child: const Text(
@@ -77,8 +79,7 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                             ),
                             child: TextButton(
                               onPressed: () async {
-                                await controller.waterNow();
-                                Get.back();
+                                await controller.updateSiramStatus(1);
                               },
                               child: const Text(
                                 "Ya",
@@ -151,6 +152,7 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                             ),
                             child: TextButton(
                               onPressed: () {
+                                controller.updatePakanStatus(0);
                                 Get.back();
                               },
                               child: const Text(
@@ -168,8 +170,7 @@ List<HawkFabMenuItem> fabMenu(BuildContext context) {
                             ),
                             child: TextButton(
                               onPressed: () async {
-                                await controller.feedNow();
-                                Get.back();
+                                await controller.updatePakanStatus(1);
                               },
                               child: const Text(
                                 "Ya",

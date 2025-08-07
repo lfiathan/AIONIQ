@@ -1,9 +1,9 @@
-import 'package:akuabot/app/data/models/education_model.dart';
+import 'package:aioniq/app/data/models/education_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EducationController extends GetxController {
-  final PageController  pageController = PageController();
+  final PageController pageController = PageController();
 
   RxInt activePage = 0.obs;
 

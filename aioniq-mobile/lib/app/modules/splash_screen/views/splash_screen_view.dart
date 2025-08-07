@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import '../controllers/splash_screen_controller.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
 
 class SplashScreenView extends GetView<SplashScreenController> {
   const SplashScreenView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color(0xffD1EBCA),
+      backgroundColor: AppColors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image(
-              image: AssetImage('assets/images/logo/Logo Akuabot.png'),
+              image: AssetImage('assets/images/logo/logo_aioniq.png'),
               width: 200,
             ),
             SizedBox(

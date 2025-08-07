@@ -3,13 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_datetime_picker_bdaya/flutter_datetime_picker_bdaya.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:akuabot/app/constant/app_colors.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
 import '../controllers/schedule_controller.dart';
 import '../widgets/duration_picker_bottom_sheet.dart';
 
 class ScheduleView extends GetView<ScheduleController> {
   const ScheduleView({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +25,7 @@ class ScheduleView extends GetView<ScheduleController> {
                     Get.textTheme.headlineMedium!.copyWith(color: Colors.white),
               ),
             ),
-            SizedBox(height: Get.height * 0.05),
+            SizedBox(height: Get.height * 0.02),
             Expanded(
               child: Container(
                 width: Get.width,
@@ -46,11 +45,10 @@ class ScheduleView extends GetView<ScheduleController> {
                     itemCount: controller.schedulesController.length,
                     itemBuilder: (context, index) {
                       final schedule = controller.schedulesController[index];
-                      final scheduleDate =
-                          DateTime.tryParse(schedule['schedule']) ??
-                              DateTime.now();
-                      final isActive = schedule['isActive'] ?? false;
-                      final duration = schedule['duration'] ?? 0;
+                      DateTime scheduleTime =
+                          DateTime.parse(schedule['schedule']);
+                      bool isActive = schedule['isActive'] ?? false;
+                      int duration = schedule['duration'] ?? 0;
                       return Card(
                         margin:
                             EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -72,7 +70,7 @@ class ScheduleView extends GetView<ScheduleController> {
                                 children: [
                                   Text(
                                     DateFormat('EEEE, d MMMM y', 'id_ID')
-                                        .format(scheduleDate),
+                                        .format(scheduleTime),
                                     style: Get.textTheme.titleSmall!.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w700),
@@ -90,7 +88,7 @@ class ScheduleView extends GetView<ScheduleController> {
                                         ),
                                         child: Text(
                                           DateFormat('HH:mm', 'id_ID')
-                                              .format(scheduleDate),
+                                              .format(scheduleTime),
                                           style: Get.textTheme.titleSmall!
                                               .copyWith(color: Colors.white),
                                         ),
@@ -124,27 +122,11 @@ class ScheduleView extends GetView<ScheduleController> {
                                         minTime: DateTime(2024, 1, 1),
                                         maxTime: DateTime(2027, 12, 31),
                                         onChanged: (date) {},
-                                        onConfirm: (date) async {
-                                          final id = schedule['id'];
-                                          if (id != null) {
-                                            // Memanggil metode updateScheduleTime dari controller
-                                            final response = await controller
-                                                .updateScheduleTime(
-                                                    index, date);
-                                            if (response) {
-                                              Get.snackbar("Berhasil",
-                                                  "Jadwal berhasil diubah",
-                                                  backgroundColor: Colors.green,
-                                                  colorText: Colors.white);
-                                            } else {
-                                              Get.snackbar("Gagal",
-                                                  "Gagal mengubah jadwal",
-                                                  backgroundColor: Colors.red,
-                                                  colorText: Colors.white);
-                                            }
-                                          }
+                                        onConfirm: (date) {
+                                          controller.updateScheduleTime(
+                                              index, date);
                                         },
-                                        currentTime: scheduleDate,
+                                        currentTime: scheduleTime,
                                         locale: LocaleType.id,
                                       );
                                     },
@@ -172,14 +154,9 @@ class ScheduleView extends GetView<ScheduleController> {
                                   SizedBox(width: Get.width * 0.01),
                                   Switch(
                                     value: isActive,
-                                    onChanged: (value) async {
-                                      // Memanggil metode updateScheduleActiveStatus dari controller
-                                      final id = schedule['id'];
-                                      if (id != null) {
-                                        await controller
-                                            .updateScheduleActiveStatus(
-                                                index, value);
-                                      }
+                                    onChanged: (value) {
+                                      controller.updateScheduleActiveStatus(
+                                          index, value);
                                     },
                                     activeColor: AppColors.normalBlueActive,
                                   ),

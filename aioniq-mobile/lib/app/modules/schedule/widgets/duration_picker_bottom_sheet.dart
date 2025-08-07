@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:akuabot/app/constant/app_colors.dart';
+import 'package:aioniq/app/constant/app_colors.dart';
 import '../controllers/schedule_controller.dart';
 
 class DurationPickerBottomSheet extends StatelessWidget {
