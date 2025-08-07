@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: themeData(context),
-      title: "Apens-iot",
+      title: "AIONIQ",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     );
