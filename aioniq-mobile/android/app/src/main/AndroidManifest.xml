@@ -2,7 +2,7 @@
     <application
         android:label="AIONIQ"
         android:name="${applicationName}"
-        android:icon="@mipmap/logo_akuabot">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
